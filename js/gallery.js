@@ -271,6 +271,8 @@ const Gallery = {
    */
   handleFilterChange(filters) {
     this.state.currentPage = 1;
+    this.state.currentCategory = filters.category;
+    this.state.currentQuery = '';
     this.loadPhotos();
   },
 
@@ -387,7 +389,7 @@ const Gallery = {
     if (columnsSelect) {
       columnsSelect.addEventListener('change', (e) => {
         const columns = e.target.value;
-        this.elements.grid.style.columnCount = columns;
+        this.elements.grid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
       });
     }
   },

@@ -7,15 +7,16 @@ const App = {
    * Initialize application
    */
   async init() {
-    console.log('Initializing CodeGallery...');
+    console.log('Initializing Tomzora...');
 
     // Initialize all modules
     this.initSidebar();
+    this.initNavbarToggle();
     this.initUploadButton();
     this.initAttributionToggle();
 
     // Gallery will initialize itself on load
-    console.log('CodeGallery initialized successfully');
+    console.log('Tomzora initialized successfully');
   },
 
   /**
@@ -159,6 +160,35 @@ const App = {
     Gallery.state.photos = downloads;
     Gallery.state.currentPage = 1;
     Gallery.render();
+  },
+
+  /**
+   * Initialize navbar hide/show toggle
+   */
+  initNavbarToggle() {
+    const header = document.querySelector('.header');
+    let lastScrollTop = 0;
+    let isHeaderVisible = true;
+
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      if (scrollTop > lastScrollTop && scrollTop > 100) {
+        // Scrolling down - hide header
+        if (isHeaderVisible) {
+          header.style.transform = 'translateY(-100%)';
+          isHeaderVisible = false;
+        }
+      } else {
+        // Scrolling up - show header
+        if (!isHeaderVisible) {
+          header.style.transform = 'translateY(0)';
+          isHeaderVisible = true;
+        }
+      }
+      
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    });
   },
 
   /**
