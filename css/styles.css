@@ -587,16 +587,21 @@ body {
 }
 
 .photo-grid.masonry {
+  display: block;
   column-count: 4;
   column-gap: 1.5rem;
 }
 
 .photo-grid.grid {
+  display: grid;
   grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
 }
 
 .photo-grid.list {
+  display: grid;
   grid-template-columns: 1fr;
+  gap: 1.5rem;
 }
 
 .photo-card {

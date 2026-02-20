@@ -66,11 +66,17 @@ const Gallery = {
       let photos;
 
       if (this.state.currentCategory) {
-        // Load by category
+        // Load by category with filters
+        const filters = Filters.getFilters();
         photos = await API.fetchPhotosByTopic(
           this.state.currentCategory,
           this.state.currentPage,
-          20
+          20,
+          {
+            sort: filters.sort,
+            orientation: filters.orientation,
+            color: filters.color
+          }
         );
       } else if (this.state.currentQuery) {
         // Load by search

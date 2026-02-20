@@ -73,16 +73,20 @@ const API = {
    * @param {string} topicSlug - Topic slug (nature, architecture, etc.)
    * @param {number} page - Page number
    * @param {number} perPage - Items per page
+   * @param {Object} filters - Additional filters
    * @returns {Promise<Array>} Array of photo objects
    */
-  async fetchPhotosByTopic(topicSlug, page = 1, perPage = 20) {
+  async fetchPhotosByTopic(topicSlug, page = 1, perPage = 20, filters = {}) {
     try {
       const params = new URLSearchParams({
         client_id: this.ACCESS_KEY,
         page,
         per_page: perPage,
-        order_by: 'latest'
+        order_by: filters.sort || 'latest'
       });
+
+      if (filters.orientation) params.append('orientation', filters.orientation);
+      if (filters.color) params.append('color', filters.color);
 
       const endpoint = `${this.BASE_URL}/topics/${topicSlug}/photos?${params}`;
       const response = await fetch(endpoint);

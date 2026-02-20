@@ -3,7 +3,7 @@
  */
 
 const Search = {
-  STORAGE_KEY: 'codegallery_search_history',
+  STORAGE_KEY: 'tomzora_search_history',
   MAX_HISTORY: 5,
   DEBOUNCE_DELAY: 300,
   debounceTimer: null,
