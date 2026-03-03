@@ -5,7 +5,6 @@
 const Filters = {
   state: {
     orientation: '',
-    color: '',
     sort: 'latest',
     category: null
   },
@@ -16,7 +15,6 @@ const Filters = {
   init() {
     this.bindCategoryButtons();
     this.bindFilterButtons();
-    this.bindColorSwatches();
   },
 
   /**
@@ -71,26 +69,7 @@ const Filters = {
     });
   },
 
-  /**
-   * Bind color swatches
-   */
-  bindColorSwatches() {
-    const colorSwatches = document.querySelectorAll('.color-swatch');
-    colorSwatches.forEach(swatch => {
-      swatch.addEventListener('click', (e) => {
-        e.preventDefault();
-        
-        // Remove active from all
-        colorSwatches.forEach(s => s.classList.remove('active'));
-        
-        // Add active to clicked
-        swatch.classList.add('active');
-        
-        const color = swatch.dataset.color;
-        this.setColor(color);
-      });
-    });
-  },
+
 
   /**
    * Set orientation filter
@@ -101,14 +80,7 @@ const Filters = {
     this.triggerFilterChange();
   },
 
-  /**
-   * Set color filter
-   * @param {string} color - Color value
-   */
-  setColor(color) {
-    this.state.color = color;
-    this.triggerFilterChange();
-  },
+
 
   /**
    * Set sort order
@@ -153,7 +125,6 @@ const Filters = {
   reset() {
     this.state = {
       orientation: '',
-      color: '',
       sort: 'latest',
       category: null
     };
@@ -165,10 +136,6 @@ const Filters = {
 
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.classList.remove('active');
-    });
-
-    document.querySelectorAll('.color-swatch').forEach(swatch => {
-      swatch.classList.remove('active');
     });
 
     // Reset to default active states

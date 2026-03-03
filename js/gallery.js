@@ -74,8 +74,7 @@ const Gallery = {
           20,
           {
             sort: filters.sort,
-            orientation: filters.orientation,
-            color: filters.color
+            orientation: filters.orientation
           }
         );
       } else if (this.state.currentQuery) {
@@ -86,8 +85,7 @@ const Gallery = {
           page: this.state.currentPage,
           perPage: 20,
           orderBy: filters.sort,
-          orientation: filters.orientation,
-          color: filters.color
+          orientation: filters.orientation
         });
       } else {
         // Load default photos
@@ -96,8 +94,7 @@ const Gallery = {
           page: this.state.currentPage,
           perPage: 20,
           orderBy: filters.sort,
-          orientation: filters.orientation,
-          color: filters.color
+          orientation: filters.orientation
         });
       }
 

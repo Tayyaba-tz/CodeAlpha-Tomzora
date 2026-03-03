@@ -15,7 +15,6 @@ const API = {
    * @param {number} options.perPage - Items per page
    * @param {string} options.orderBy - Sort order (latest, oldest, popular)
    * @param {string} options.orientation - Image orientation (landscape, portrait, squarish)
-   * @param {string} options.color - Color filter
    * @returns {Promise<Array>} Array of photo objects
    */
   async fetchPhotos(options = {}) {
@@ -24,8 +23,7 @@ const API = {
       page = 1,
       perPage = 20,
       orderBy = 'latest',
-      orientation = '',
-      color = ''
+      orientation = ''
     } = options;
 
     try {
@@ -40,7 +38,6 @@ const API = {
         // Search endpoint
         params.append('query', query);
         if (orientation) params.append('orientation', orientation);
-        if (color) params.append('color', color);
         endpoint = `${this.BASE_URL}/search/photos?${params}`;
       } else {
         // List photos endpoint
@@ -86,8 +83,6 @@ const API = {
       });
 
       if (filters.orientation) params.append('orientation', filters.orientation);
-      if (filters.color) params.append('color', filters.color);
-
       const endpoint = `${this.BASE_URL}/topics/${topicSlug}/photos?${params}`;
       const response = await fetch(endpoint);
 
