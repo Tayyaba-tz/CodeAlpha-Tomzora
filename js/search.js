@@ -193,11 +193,4 @@ const Search = {
   }
 };
 
-// Initialize on script load
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    Search.init();
-  });
-} else {
-  Search.init();
-}
+// Search.init() is called by app.js after all modules are loaded

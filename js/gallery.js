@@ -275,7 +275,7 @@ const Gallery = {
   handleFilterChange(filters) {
     this.state.currentPage = 1;
     this.state.currentCategory = filters.category;
-    this.state.currentQuery = '';
+    // Don't reset currentQuery here - it should only be cleared by explicit search clear
     this.loadPhotos();
   },
 

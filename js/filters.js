@@ -155,11 +155,4 @@ const Filters = {
   }
 };
 
-// Initialize on script load
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    Filters.init();
-  });
-} else {
-  Filters.init();
-}
+// Filters.init() is called by app.js after all modules are loaded

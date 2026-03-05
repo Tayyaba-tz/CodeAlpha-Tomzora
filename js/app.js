@@ -9,7 +9,12 @@ const App = {
   async init() {
     console.log('Initializing Tomzora...');
 
-    // Initialize all modules
+    // Initialize all modules in order
+    Themes.init();
+    Search.init();
+    Filters.init();
+    Favorites.init();
+    
     this.initSidebar();
     this.initNavbarToggle();
     this.initUploadButton();
