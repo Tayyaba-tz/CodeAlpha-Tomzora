@@ -20,7 +20,6 @@ const App = {
     this.initUploadButton();
     this.initAttributionToggle();
 
-    // Gallery will initialize itself on load
     console.log('Tomzora initialized successfully');
   },
 

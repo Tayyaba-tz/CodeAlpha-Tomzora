@@ -154,5 +154,3 @@ const Filters = {
     }));
   }
 };
-
-// Filters.init() is called by app.js after all modules are loaded

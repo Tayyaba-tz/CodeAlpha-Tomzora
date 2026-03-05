@@ -192,5 +192,3 @@ const Search = {
     this.hideSuggestions();
   }
 };
-
-// Search.init() is called by app.js after all modules are loaded
