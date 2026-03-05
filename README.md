@@ -2,7 +2,7 @@
 
 A modern, responsive image gallery application built with vanilla HTML5, CSS3, and JavaScript ES6. Browse, search, filter, and manage beautiful photos from Unsplash with an elegant user interface and multiple theme options.
 
-## 🎯 Features
+##  Features
 
 ### Core Functionality
 - **Photo Gallery** - Browse thousands of high-quality images from Unsplash
@@ -46,13 +46,13 @@ A modern, responsive image gallery application built with vanilla HTML5, CSS3, a
   - Keyboard navigation support
   - Accessibility features (ARIA labels)
 
-## 📋 Requirements
+##  Requirements
 
 - Modern web browser (Chrome, Firefox, Safari, Edge)
 - Internet connection (for Unsplash API)
 - No server or build tools required
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Installation
 
@@ -79,25 +79,7 @@ A modern, responsive image gallery application built with vanilla HTML5, CSS3, a
 3. **Access the application**
    - Open `http://localhost:8000` in your browser
 
-## 📁 Project Structure
-
-```
-client/
-├── index.html              # Main HTML file with semantic structure
-├── css/
-│   └── styles.css         # Complete styling with 6 themes
-└── js/
-    ├── app.js             # Main app initialization and coordination
-    ├── api.js             # Unsplash API integration
-    ├── gallery.js         # Photo grid rendering and management
-    ├── lightbox.js        # Full-screen photo viewer
-    ├── search.js          # Search functionality with debouncing
-    ├── filters.js         # Category and filter management
-    ├── favorites.js       # Favorites and history management
-    └── themes.js          # Theme switching and persistence
-```
-
-## 🔧 Configuration
+##  Configuration
 
 ### API Key
 The application uses the Unsplash API. To use your own API key:
@@ -162,7 +144,7 @@ The application uses the Unsplash API. To use your own API key:
 - **Add to Favorites** - Click heart icon
 - **View Details** - Photographer info and photo metadata
 
-## 🎨 Theme Details
+##  Theme Details
 
 ### Light Theme (Warm Cream & Coral)
 - Background: Warm cream (#FEF7F3)
@@ -194,14 +176,14 @@ The application uses the Unsplash API. To use your own API key:
 - Accent: Vibrant orange (#FF7F50)
 - Warm, energetic vibe
 
-## 🔐 Privacy & Attribution
+##  Privacy & Attribution
 
 - **Unsplash Attribution** - All photos are properly attributed to photographers
 - **Local Storage** - Favorites, recent views, and downloads are stored locally in your browser
 - **No Data Collection** - Application does not collect or store personal data
 - **Open Source** - Built with transparent, readable code
 
-## 🛠️ Browser Compatibility
+##  Browser Compatibility
 
 | Browser | Version | Support |
 |---------|---------|---------|
@@ -211,7 +193,7 @@ The application uses the Unsplash API. To use your own API key:
 | Edge | Latest | ✅ Full Support |
 | Opera | Latest | ✅ Full Support |
 
-## ⚡ Performance
+##  Performance
 
 - **No Build Process** - Pure vanilla JavaScript, no compilation needed
 - **Lightweight** - Total size: ~23 KB (compressed)
@@ -219,7 +201,7 @@ The application uses the Unsplash API. To use your own API key:
 - **Lazy Loading** - Images load on demand
 - **Smooth Animations** - Hardware-accelerated CSS transitions
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Photos Not Loading
 - **Check Internet Connection** - Application requires internet access
@@ -238,7 +220,7 @@ The application uses the Unsplash API. To use your own API key:
 - **Update Browser** - Ensure you have the latest browser version
 - **Disable Extensions** - Some extensions may interfere
 
-## 📚 API Reference
+##  API Reference
 
 ### Unsplash API Endpoints Used
 - `GET /photos` - Get random or paginated photos
@@ -246,7 +228,7 @@ The application uses the Unsplash API. To use your own API key:
 - `GET /topics/{id}/photos` - Get photos by topic
 - `POST /photos/{id}/statistics` - Track downloads
 
-## 🚀 Future Enhancements
+##  Future Enhancements
 
 - Cloud sync for favorites across devices
 - Advanced search with multiple filters
@@ -257,20 +239,11 @@ The application uses the Unsplash API. To use your own API key:
 - Advanced image editing tools
 - Dark mode auto-detection
 
-## 📄 License
+##  License
 
 This project uses the Unsplash API. Please refer to [Unsplash License](https://unsplash.com/license) for usage terms.
 
-## 🤝 Contributing
-
-To contribute improvements:
-1. Fork the project
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## 📞 Support
+##  Support
 
 For issues or questions:
 1. Check the Troubleshooting section
@@ -285,7 +258,7 @@ For issues or questions:
 - [CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*)
 - [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
 
-## 📝 Changelog
+##  Changelog
 
 ### Version 1.0.0 (Current)
 - ✅ Initial release
@@ -299,7 +272,7 @@ For issues or questions:
 - ✅ Download tracking
 - ✅ Accessibility features
 
-## 🎉 Credits
+##  Credits
 
 **Built with:**
 - Vanilla HTML5, CSS3, JavaScript ES6
