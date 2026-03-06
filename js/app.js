@@ -16,10 +16,12 @@ const App = {
     Favorites.init();
     
     this.initSidebar();
+    this.initMobileMenuBtn();
     this.initNavbarToggle();
     this.initUploadButton();
     this.initAttributionToggle();
 
+    // Gallery will initialize itself on load
     console.log('Tomzora initialized successfully');
   },
 
@@ -98,6 +100,43 @@ const App = {
         this.showDownloads();
         break;
     }
+  },
+
+  /**
+   * Initialize mobile menu button
+   */
+  initMobileMenuBtn() {
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const sidebar = document.getElementById('sidebar');
+
+    if (!mobileMenuBtn || !sidebar) return;
+
+    // Toggle sidebar when hamburger is clicked
+    mobileMenuBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      sidebar.classList.toggle('open');
+      mobileMenuBtn.classList.toggle('active');
+    });
+
+    // Close sidebar when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+        sidebar.classList.remove('open');
+        mobileMenuBtn.classList.remove('active');
+      }
+    });
+
+    // Close sidebar when a nav link is clicked
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 767) {
+          sidebar.classList.remove('open');
+          mobileMenuBtn.classList.remove('active');
+        }
+      });
+    });
   },
 
   /**
