@@ -140,7 +140,8 @@ body {
   border-right: 1px solid var(--border-color);
   overflow-y: auto;
   z-index: 1000;
-  transition: transform var(--transition);
+  transition: transform var(--transition), box-shadow var(--transition);
+  transform: translateX(0);
 }
 
 .main-content {
@@ -182,11 +183,11 @@ body {
 }
 
 .logo-text {
-  display: none;
+  display: inline;
 }
 
 .sidebar-toggle {
-  display: none;
+  display: none;  /* shown via media query on drawer screens */
   background: none;
   border: none;
   cursor: pointer;
@@ -196,6 +197,13 @@ body {
   height: 32px;
   align-items: center;
   justify-content: center;
+  border-radius: 4px;
+  transition: all var(--transition);
+}
+
+.sidebar-toggle:hover {
+  background-color: var(--accent-light);
+  color: var(--accent-color);
 }
 
 .sidebar-toggle svg {
@@ -455,6 +463,26 @@ body {
 .mobile-menu-btn.active {
   background-color: var(--accent-color);
   color: #FFFFFF;
+}
+
+/* Sidebar Overlay (drawer backdrop) */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  z-index: 90;   /* below header (100) so hamburger stays clickable */
+  transition: opacity var(--transition);
+  opacity: 0;
+}
+
+.sidebar-overlay.active {
+  display: block;
+  opacity: 1;
+  animation: fadeIn 0.25s ease;
 }
 
 .header-left {
@@ -1130,14 +1158,48 @@ body {
    9. RESPONSIVE DESIGN
    ============================================================================ */
 
-/* Tablet (768px - 1023px) */
+/* ── Drawer breakpoint: tablet + mobile (< 1024px) ──────────────────────── */
+/* On anything smaller than a proper desktop the sidebar becomes a slide-in  */
+/* drawer that is toggled by the hamburger button.                           */
 @media (max-width: 1023px) {
+  /* Sidebar becomes a drawer */
   .sidebar {
-    width: 240px;
+    width: 300px;
+    transform: translateX(-100%);    /* hidden off-screen by default */
+    border-right: 1px solid var(--border-color);
+    box-shadow: none;
   }
 
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Main content fills full width (no sidebar offset) */
   .main-content {
-    margin-left: 240px;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* Show hamburger button */
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  /* Show close (×) button inside sidebar header */
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  /* Show overlay when sidebar is open */
+  .sidebar.open ~ * .sidebar-overlay,
+  .sidebar-overlay.active {
+    display: block;
+  }
+
+  .header {
+    padding: 0.75rem 1.5rem;
+    gap: 1rem;
   }
 
   .photo-grid.masonry {
@@ -1152,10 +1214,6 @@ body {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .logo-text {
-    display: inline;
-  }
-
   .lightbox-nav.prev {
     left: -50px;
   }
@@ -1164,85 +1222,64 @@ body {
     right: -50px;
   }
 
-  .header {
-    padding: 0.75rem 1.5rem;
-    gap: 1rem;
-  }
-
-  .header-center {
-    max-width: 300px;
-  }
-
   .content-wrapper {
     padding: 1.5rem;
   }
 }
 
-/* Mobile (360px - 767px) */
-@media (max-width: 767px) {
-  body {
-    flex-direction: column;
+/* ── Tablet (600px – 1023px) ─────────────────────────────────────────────── */
+@media (max-width: 1023px) and (min-width: 600px) {
+  .header-center {
+    max-width: 320px;
   }
+}
 
+/* ── Mobile (< 600px) ────────────────────────────────────────────────────── */
+@media (max-width: 599px) {
   .sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    transform: translateX(-100%);
-    z-index: 999;
-    border-right: none;
-    border-bottom: none;
-  }
-
-  .sidebar.open {
-    transform: translateX(0);
-  }
-
-  .mobile-menu-btn {
-    display: flex;
-  }
-
-  .sidebar-toggle {
-    display: flex;
-  }
-
-  .main-content {
-    margin-left: 0;
-    width: 100%;
+    width: 85%;
+    max-width: 300px;
   }
 
   .header {
     flex-wrap: wrap;
-    padding: 0.75rem 1rem;
-    gap: 0.75rem;
+    padding: 0.6rem 0.875rem;
+    gap: 0.5rem;
+  }
+
+  /* Row 1: hamburger | title | view controls */
+  .mobile-menu-btn {
+    order: 1;
+    margin-right: 0.25rem;
+    flex-shrink: 0;
   }
 
   .header-left {
-    order: 1;
+    order: 2;
+    flex: 1;
   }
 
-  .header-center {
+  .header-right {
     order: 3;
+    flex-shrink: 0;
+    gap: 0.5rem;
+  }
+
+  /* Row 2: full-width search bar */
+  .header-center {
+    order: 4;
     flex-basis: 100%;
     max-width: none;
   }
 
-  .header-right {
-    order: 2;
-    gap: 0.5rem;
-  }
-
-
-
   .photo-grid.masonry {
     column-count: 2;
-    column-gap: 1rem;
+    column-gap: 0.875rem;
   }
 
   .photo-grid.grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.875rem;
   }
 
   .skeleton-grid {
@@ -1250,12 +1287,7 @@ body {
   }
 
   .content-wrapper {
-    padding: 1rem;
-  }
-
-  .lightbox-container {
-    gap: 1rem;
-    max-width: 95vw;
+    padding: 0.875rem;
   }
 
   .lightbox-content {
@@ -1265,7 +1297,7 @@ body {
 
   #lightbox-image {
     max-width: 100%;
-    max-height: 400px;
+    max-height: 50vh;
   }
 
   .lightbox-info {
@@ -1279,11 +1311,11 @@ body {
   }
 
   .lightbox-nav.prev {
-    left: -50px;
+    left: -44px;
   }
 
   .lightbox-nav.next {
-    right: -50px;
+    right: -44px;
   }
 
   .lightbox-close {
@@ -1292,14 +1324,14 @@ body {
 
   .toast {
     bottom: 1rem;
-    right: 1rem;
-    left: 1rem;
+    right: 0.875rem;
+    left: 0.875rem;
     max-width: none;
   }
 }
 
-/* Mini Mobile (< 360px) */
-@media (max-width: 359px) {
+/* ── Mini Mobile (< 400px) ───────────────────────────────────────────────── */
+@media (max-width: 399px) {
   .photo-grid.masonry {
     column-count: 1;
   }
@@ -1313,7 +1345,7 @@ body {
   }
 
   .header {
-    padding: 0.5rem;
+    padding: 0.5rem 0.75rem;
   }
 
   .app-title {
@@ -1321,16 +1353,21 @@ body {
   }
 
   .search-input {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
 
   .content-wrapper {
-    padding: 0.75rem;
+    padding: 0.625rem;
   }
 
-  .lightbox-nav {
-    width: 36px;
-    height: 36px;
+  .view-btn {
+    width: 30px;
+    height: 30px;
+  }
+
+  .view-btn svg {
+    width: 15px;
+    height: 15px;
   }
 }
 
@@ -1413,242 +1450,6 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
-
-/* ============================================================================
-   13. ENHANCED RESPONSIVE DESIGN - ADDITIONAL BREAKPOINTS
-   ============================================================================ */
-
-/* Small Tablet (480px - 767px) */
-@media (min-width: 480px) and (max-width: 767px) {
-  .header {
-    flex-wrap: nowrap;
-    padding: 0.75rem 1.25rem;
-  }
-
-  .header-center {
-    order: 2;
-    flex-basis: auto;
-    max-width: 250px;
-    margin: 0 auto;
-  }
-
-  .header-left {
-    order: 1;
-  }
-
-  .header-right {
-    order: 3;
-  }
-
-  .app-title {
-    font-size: 1.25rem;
-  }
-
-  .sidebar-section {
-    padding: 1.25rem;
-  }
-
-  .category-list {
-    gap: 0.75rem;
-  }
-
-  .category-btn {
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
-  }
-
-  .photo-grid.masonry {
-    column-count: 2;
-    column-gap: 1.25rem;
-  }
-
-  .photo-grid.grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
-  }
-}
-
-/* Extra Small Mobile (360px - 479px) */
-@media (min-width: 360px) and (max-width: 479px) {
-  .header {
-    padding: 0.75rem 0.75rem;
-  }
-
-  .header-center {
-    order: 3;
-    flex-basis: 100%;
-    max-width: none;
-  }
-
-  .search-input {
-    font-size: 0.85rem;
-    padding: 0.65rem 0.65rem 0.65rem 2.25rem;
-  }
-
-  .search-icon {
-    left: 0.65rem;
-    width: 16px;
-    height: 16px;
-  }
-
-  .app-title {
-    font-size: 1.15rem;
-  }
-
-  .view-btn {
-    width: 32px;
-    height: 32px;
-  }
-
-  .view-btn svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .sidebar-section {
-    padding: 1rem;
-  }
-
-  .section-title {
-    font-size: 0.7rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .category-btn {
-    padding: 0.5rem 0.65rem;
-    font-size: 0.8rem;
-  }
-
-  .filter-btn {
-    padding: 0.5rem 0.65rem;
-    font-size: 0.8rem;
-  }
-
-  .photo-grid.masonry {
-    column-count: 1;
-    column-gap: 0.75rem;
-  }
-
-  .photo-grid.grid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-
-  .content-wrapper {
-    padding: 0.75rem;
-  }
-
-  .photo-card {
-    margin-bottom: 0.75rem;
-  }
-}
-
-/* Ultra Small Mobile (< 360px) */
-@media (max-width: 359px) {
-  .header {
-    padding: 0.5rem;
-    gap: 0.5rem;
-  }
-
-  .header-center {
-    order: 3;
-    flex-basis: 100%;
-    max-width: none;
-  }
-
-  .search-input {
-    font-size: 0.75rem;
-    padding: 0.5rem 0.5rem 0.5rem 2rem;
-  }
-
-  .search-icon {
-    left: 0.5rem;
-    width: 14px;
-    height: 14px;
-  }
-
-  .app-title {
-    font-size: 1rem;
-  }
-
-  .view-btn {
-    width: 28px;
-    height: 28px;
-    padding: 0.25rem;
-  }
-
-  .view-btn svg {
-    width: 14px;
-    height: 14px;
-  }
-
-  .sidebar {
-    width: 100%;
-  }
-
-  .sidebar-header {
-    padding: 1rem;
-  }
-
-  .sidebar-section {
-    padding: 0.75rem;
-  }
-
-  .section-title {
-    font-size: 0.65rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .category-btn {
-    padding: 0.4rem 0.5rem;
-    font-size: 0.75rem;
-  }
-
-  .filter-btn {
-    padding: 0.4rem 0.5rem;
-    font-size: 0.75rem;
-  }
-
-  .setting-select {
-    font-size: 0.75rem;
-    padding: 0.4rem;
-  }
-
-  .photo-grid.masonry {
-    column-count: 1;
-    column-gap: 0.5rem;
-  }
-
-  .photo-grid.grid {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-  }
-
-  .content-wrapper {
-    padding: 0.5rem;
-  }
-
-  .photo-card {
-    margin-bottom: 0.5rem;
-  }
-
-  .lightbox-container {
-    gap: 0.5rem;
-  }
-
-  .lightbox-info {
-    padding: 0.75rem;
-    gap: 1rem;
-  }
-
-  .toast {
-    bottom: 0.75rem;
-    right: 0.75rem;
-    left: 0.75rem;
-    font-size: 0.8rem;
-    padding: 0.75rem 1rem;
-  }
-}
 
 /* Large Desktop (1440px and above) */
 @media (min-width: 1440px) {
@@ -1781,5 +1582,223 @@ select:focus-visible {
 
   .photo-grid {
     gap: 1rem;
+  }
+}
+
+/* ============================================================================
+   14. LARGE SCREEN & TV BREAKPOINTS
+   ============================================================================ */
+
+/* Small Desktop (1024px - 1199px) */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .photo-grid.masonry {
+    column-count: 3;
+  }
+
+  .photo-grid.grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .skeleton-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* 2K Displays (2560px - 3839px) */
+@media (min-width: 2560px) {
+  .sidebar {
+    width: 400px;
+  }
+
+  .main-content {
+    margin-left: 400px;
+  }
+
+  .header {
+    padding: 1.5rem 4rem;
+  }
+
+  .header-center {
+    max-width: 700px;
+  }
+
+  .content-wrapper {
+    padding: 3.5rem 4rem;
+  }
+
+  .photo-grid.masonry {
+    column-count: 7;
+    column-gap: 2rem;
+  }
+
+  .photo-grid.grid {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2rem;
+  }
+
+  .skeleton-grid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  .app-title {
+    font-size: 2rem;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .nav-link {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .nav-link svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .category-btn,
+  .filter-btn {
+    font-size: 1rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .setting-select {
+    font-size: 1rem;
+    padding: 0.6rem;
+  }
+
+  .search-input {
+    font-size: 1.1rem;
+    padding: 1rem 1rem 1rem 3rem;
+  }
+
+  .search-icon {
+    width: 22px;
+    height: 22px;
+    left: 1rem;
+  }
+
+  .view-btn {
+    width: 48px;
+    height: 48px;
+  }
+
+  .view-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* 4K / TV Displays (3840px+) */
+@media (min-width: 3840px) {
+  .sidebar {
+    width: 520px;
+  }
+
+  .main-content {
+    margin-left: 520px;
+  }
+
+  .header {
+    padding: 2rem 6rem;
+  }
+
+  .header-center {
+    max-width: 1000px;
+  }
+
+  .content-wrapper {
+    padding: 5rem 6rem;
+  }
+
+  .photo-grid.masonry {
+    column-count: 8;
+    column-gap: 2.5rem;
+  }
+
+  .photo-grid.grid {
+    grid-template-columns: repeat(8, 1fr);
+    gap: 2.5rem;
+  }
+
+  .skeleton-grid {
+    grid-template-columns: repeat(8, 1fr);
+  }
+
+  .app-title {
+    font-size: 2.5rem;
+  }
+
+  .logo {
+    font-size: 2rem;
+  }
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .nav-link {
+    padding: 1.25rem 2rem;
+    font-size: 1.25rem;
+  }
+
+  .nav-link svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .section-title,
+  .nav-title {
+    font-size: 1rem;
+  }
+
+  .category-btn,
+  .filter-btn {
+    font-size: 1.2rem;
+    padding: 0.75rem 1.25rem;
+  }
+
+  .setting-select,
+  .setting-label {
+    font-size: 1.2rem;
+  }
+
+  .search-input {
+    font-size: 1.4rem;
+    padding: 1.25rem 1.25rem 1.25rem 3.5rem;
+  }
+
+  .search-icon {
+    width: 28px;
+    height: 28px;
+    left: 1.25rem;
+  }
+
+  .view-btn {
+    width: 60px;
+    height: 60px;
+  }
+
+  .view-btn svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .load-more-btn {
+    font-size: 1.2rem;
+    padding: 1rem 3rem;
+  }
+
+  .photo-card-attribution {
+    font-size: 1rem;
+    padding: 1rem 1.25rem;
   }
 }

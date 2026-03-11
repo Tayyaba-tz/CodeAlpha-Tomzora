@@ -26,48 +26,90 @@ const App = {
   },
 
   /**
-   * Initialize sidebar functionality
+   * Initialize sidebar functionality (handles all screen sizes)
    */
   initSidebar() {
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebar-toggle');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const overlay = document.getElementById('sidebar-overlay');
     const navLinks = document.querySelectorAll('.nav-link');
 
-    if (!sidebarToggle) return;
+    const openSidebar = () => {
+      sidebar.classList.add('open');
+      if (mobileMenuBtn) mobileMenuBtn.classList.add('active');
+      if (overlay) overlay.classList.add('active');
+    };
 
-    // Toggle sidebar on mobile
-    sidebarToggle.addEventListener('click', (e) => {
-      e.preventDefault();
-      sidebar.classList.toggle('open');
-    });
+    const closeSidebar = () => {
+      sidebar.classList.remove('open');
+      if (mobileMenuBtn) mobileMenuBtn.classList.remove('active');
+      if (overlay) overlay.classList.remove('active');
+    };
 
-    // Close sidebar when clicking nav links
+    const toggleSidebar = () => {
+      if (sidebar.classList.contains('open')) {
+        closeSidebar();
+      } else {
+        openSidebar();
+      }
+    };
+
+    // Hamburger button in the header (mobile)
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleSidebar();
+      });
+    }
+
+    // Close button inside the sidebar (mobile)
+    if (sidebarToggle) {
+      sidebarToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeSidebar();
+      });
+    }
+
+    // Clicking the overlay closes the sidebar
+    if (overlay) {
+      overlay.addEventListener('click', () => {
+        closeSidebar();
+      });
+    }
+
+    // Close sidebar when nav links are clicked on drawer screens
     navLinks.forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
-        
-        // Remove active from all
+
         navLinks.forEach(l => l.classList.remove('active'));
-        
-        // Add active to clicked
         link.classList.add('active');
 
         const view = link.dataset.view;
         this.handleNavigation(view);
 
-        // Close sidebar on mobile
-        if (window.innerWidth <= 767) {
-          sidebar.classList.remove('open');
+        if (window.innerWidth <= 1023) {
+          closeSidebar();
         }
       });
     });
 
-    // Close sidebar when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+    // Clean up drawer state when resizing to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1023) {
         sidebar.classList.remove('open');
+        if (mobileMenuBtn) mobileMenuBtn.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
       }
     });
+  },
+
+  /**
+   * Initialize mobile menu button (no-op — handled by initSidebar)
+   */
+  initMobileMenuBtn() {
+    // All mobile menu button logic is consolidated in initSidebar()
   },
 
   /**
@@ -100,43 +142,6 @@ const App = {
         this.showDownloads();
         break;
     }
-  },
-
-  /**
-   * Initialize mobile menu button
-   */
-  initMobileMenuBtn() {
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const sidebar = document.getElementById('sidebar');
-
-    if (!mobileMenuBtn || !sidebar) return;
-
-    // Toggle sidebar when hamburger is clicked
-    mobileMenuBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      sidebar.classList.toggle('open');
-      mobileMenuBtn.classList.toggle('active');
-    });
-
-    // Close sidebar when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-        sidebar.classList.remove('open');
-        mobileMenuBtn.classList.remove('active');
-      }
-    });
-
-    // Close sidebar when a nav link is clicked
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        if (window.innerWidth <= 767) {
-          sidebar.classList.remove('open');
-          mobileMenuBtn.classList.remove('active');
-        }
-      });
-    });
   },
 
   /**
@@ -206,32 +211,49 @@ const App = {
   },
 
   /**
-   * Initialize navbar hide/show toggle
+   * Initialize navbar hide/show on scroll
    */
   initNavbarToggle() {
     const header = document.querySelector('.header');
+    const contentWrapper = document.querySelector('.content-wrapper');
     let lastScrollTop = 0;
     let isHeaderVisible = true;
+    let ticking = false;
 
+    const handleScroll = (scrollTop) => {
+      if (ticking) return;
+      ticking = true;
+
+      requestAnimationFrame(() => {
+        if (scrollTop > lastScrollTop && scrollTop > 80) {
+          if (isHeaderVisible) {
+            header.style.transform = 'translateY(-100%)';
+            isHeaderVisible = false;
+          }
+        } else if (scrollTop < lastScrollTop - 10 || scrollTop <= 80) {
+          if (!isHeaderVisible) {
+            header.style.transform = 'translateY(0)';
+            isHeaderVisible = true;
+          }
+        }
+
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        ticking = false;
+      });
+    };
+
+    // Listen on window scroll (standard page scroll)
     window.addEventListener('scroll', () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
-      if (scrollTop > lastScrollTop && scrollTop > 100) {
-        // Scrolling down - hide header
-        if (isHeaderVisible) {
-          header.style.transform = 'translateY(-100%)';
-          isHeaderVisible = false;
-        }
-      } else {
-        // Scrolling up - show header
-        if (!isHeaderVisible) {
-          header.style.transform = 'translateY(0)';
-          isHeaderVisible = true;
-        }
-      }
-      
-      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-    });
+      handleScroll(scrollTop);
+    }, { passive: true });
+
+    // Also listen on content-wrapper in case it's the actual scroll container
+    if (contentWrapper) {
+      contentWrapper.addEventListener('scroll', () => {
+        handleScroll(contentWrapper.scrollTop);
+      }, { passive: true });
+    }
   },
 
   /**
